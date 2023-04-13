@@ -1,23 +1,51 @@
 # MVDNet
-Robust Multimodal Vehicle Detection in Foggy Weather Using Complementary Lidar and Radar Signals, CVPR 2021.
+Reference: Robust Multimodal Vehicle Detection in Foggy Weather Using Complementary Lidar and Radar Signals, CVPR 2021.
 
-## Prerequisites
+This repo have some update from the original paper
+
+## Get Started
+
+### Prerequisites
 
 - Python 3.7
-- Pytorch 1.5.0
-- Detectron2
-- Pycocotools
+- Pytorch 1.9.1
+- Numpy 1.16.4
+- Detectron2 (modified version)
+- Pycocotools 2.0
 
-MVDNet uses an old version of Detectron2 (i.e., 0.1.1) with [minor modifications](https://github.com/qiank10/detectron2/commit/370700b01be5ce401a1803af70d3e4c0471858c5). To download and install the compatible version:
+__step 0__ in case you want plan to work on conda environment. Download and install fron the [official website](https://docs.conda.io/en/latest/miniconda.html)
+
+```
+conda create --name MVDNet python=3.7 -y
+conda activate MVDNet
+```
+
+__step 1__ install pytorch. This work uses cuda [11.1](https://developer.nvidia.com/cuda-11.1.0-download-archive) and Pytorch [1.9.1](https://pytorch.org/get-started/previous-versions/)
+
+On GPU
+
+On CPU
+
+### Installation
+
+__Step 0__ install specific numpy version
+```
+conda install -c conda-forge numpy=1.16.4
+# or 
+pip install numpy==1.16.4
+```
+
+__Step 1__ MVDNet uses an old version of Detectron2 (i.e., 0.1.1) with [minor modifications](https://github.com/qiank10/detectron2/commit/370700b01be5ce401a1803af70d3e4c0471858c5). To download and install the compatible version:
 ```
 git clone https://github.com/qiank10/detectron2.git
+cd detectron2
 git checkout alt-0.1.1
-cd detectron2 && pip install -e .
+pip install -e .
 ```
 
-Install MVDNet
+Install MVDNet with some modification from
 ```
-git clone https://github.com/qiank10/MVDNet.git
+git clone https://github.com/MaiRajborirug/MVDNet.git
 cd MVDNet && pip install -e .
 ```
 

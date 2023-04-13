@@ -91,7 +91,8 @@ class RobotCarMapper:
                 if self.mode == "train":
                     lidar_history_path = os.path.join(data_root, "lidar_history")
                     lidar_history_name = os.path.join(lidar_history_path, timestamp+'_'+str(i)+'.bin')
-                    lidar_history_data = np.fromfile(lidar_history_name, dtype=np.float32)
+                    # lidar_history_data = np.fromfile(lidar_history_name, dtype=np.float32)
+                    lidar_history_data = np.fromfile(os.readlink(lidar_history_name), dtype=np.float32) # add
                     lidar_history_data = lidar_history_data.reshape((-1, 4))
                     lidar_history_T_name = os.path.join(lidar_history_path, timestamp+'_'+str(i)+'_T.bin')
                     lidar_history_T = np.fromfile(lidar_history_T_name, dtype=np.float32)
@@ -104,7 +105,8 @@ class RobotCarMapper:
                     else:
                         lidar_history_path = os.path.join(data_root, ("lidar_history_fog_"+str(self.eval_beta)).rstrip('0'))
                     lidar_history_name = os.path.join(lidar_history_path, timestamp+'_'+str(i)+'.bin')
-                    lidar_history_data = np.fromfile(lidar_history_name, dtype=np.float32)
+                    # lidar_history_data = np.fromfile(lidar_history_name, dtype=np.float32)
+                    lidar_history_data = np.fromfile(os.readlink(lidar_history_name), dtype=np.float32) # add
                     lidar_history_data = lidar_history_data.reshape((-1, 4))
                     lidar_history_T_name = os.path.join(lidar_history_path, timestamp+'_'+str(i)+'_T.bin')
                     lidar_history_T = np.fromfile(lidar_history_T_name, dtype=np.float32)
