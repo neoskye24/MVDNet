@@ -12,6 +12,8 @@ This repo have some update from the original paper
 - Numpy 1.16.4
 - Detectron2 (modified version)
 - Pycocotools
+- pip install setuptools==59.5.0
+- pip install psutil
 
 __step 0__ in case you want plan to work on conda environment. Download and install fron the [official website](https://docs.conda.io/en/latest/miniconda.html)
 
@@ -22,9 +24,7 @@ conda activate MVDNet
 
 __step 1__ install pytorch. This work uses cuda [11.1](https://developer.nvidia.com/cuda-11.1.0-download-archive) and Pytorch [1.9.1](https://pytorch.org/get-started/previous-versions/)
 
-On GPU
-
-On CPU
+> **_NOTE:_** Currently the model can only train and evaluate on GPU (CUDA enabled)
 
 ### Installation
 
@@ -35,9 +35,11 @@ conda install -c conda-forge numpy=1.16.4
 pip install numpy==1.16.4
 ```
 
-__Step 1__ install Pycocotools
+__Step 1__ install other related package
 ```
-pip install pycocotool
+pip install pycocotools
+pip install psutil
+pip install setuptools==59.5.0
 ```
 
 __Step 2__ MVDNet uses an old version of Detectron2 (i.e., 0.1.1) with [minor modifications](https://github.com/qiank10/detectron2/commit/370700b01be5ce401a1803af70d3e4c0471858c5). To download and install the compatible version:
@@ -58,7 +60,7 @@ cd MVDNet && pip install -e .
 
 __Step 0__ download partually processed dataset
 
-This repo already partually processed the Oxford Radar RobotCar Dataset and can be downloaded from [CMU box](https://cmu.box.com/s/2xq20dr5hf6oncnou26owmkhzwnxdi73). If you are using the default configure, replace the github subfolder folder `MVDNet/data/RobotCar` with this unzipped folder `RobotCar`.
+This repo already partually processed the Oxford Radar RobotCar Dataset and can be downloaded from [CMU box](https://cmu.box.com/s/f4v6lwdi4civuz7d127uym7v74e1p2lw). If you are using the default configure, replace the github subfolder folder `MVDNet/data/RobotCar` with this unzipped folder `RobotCar`.
 
 > **_NOTE:_** The author of MVDNet create a 2D and 3D bounding box for data from [Oxford Radar RobotCar Dataset](https://oxford-robotics-institute.github.io/radar-robotcar-dataset) in the first record (Date: 10/01/2019, Time: 11:46:21 GMT). If your want to adjust the lidar fog density. You can follow the step from the original [MVDNet](https://github.com/qiank10/MVDNet/blob/main/README.md#prepare-data) github
 
@@ -103,14 +105,14 @@ __Step 1__ select fog lidar
 There are lidar datasets with three different fog augmentations in `/RobotCar/{lidar_fog_0, lidar_fog_006, lidar_fog_mix}/{lidar, lidar_history}`. Choose the fog condition and move `lidar` and `lidar_history` folder to `/RobotCar/objects/`
 
 __Step 2__ adjust symlink (optional)
-We need to adjust symlinks' target so that the symlink file in `./data/RobotCar/object/lidar_history/___.bin` point to in `./data/RobotCar/object/lidar/___.bin` The jupyter notebook function to adjust the symlink if in `./tool/change_symlink.ipynb`
+We need to adjust symlinks' target so that the symlink file in `./data/RobotCar/object/lidar_history/___.bin` point to in `./data/RobotCar/object/lidar/___.bin` The jupyter notebook function to adjust the symlink if in `./helper_functions/change_symlink.ipynb`
 
 
 ## Train and Evaluation
 
 ### Pretrain weight
 
-The pretrain weight for `lidar_fog_0` and `lidar_fog_mix` can be download from [CMU box](https://cmu.box.com/s/myfk2bxzq8bzqheroex3qwce35e7plrw)
+The pretrain weight for `clear_weather`, `mix_weather`, and `fog_weather` can be download from [CMU box](https://https://cmu.box.com/s/myfk2bxzq8bzqheroex3qwce35e7plrw)
 
 ### Train MVDNet
 ```
