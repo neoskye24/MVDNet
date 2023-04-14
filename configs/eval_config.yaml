@@ -6,7 +6,7 @@ INPUT:
 DATASETS:
   TEST: ("robotcar_eval",)
 MODEL:
-  # WEIGHTS: "./output/mvdnet/model_final.pth"
+  WEIGHTS: "./output/mvdnet/model_final.pth"
   # WEIGHTS: "./MVDNet_weights/moddel_final_clear_weather.pth"
-  WEIGHTS: "./MVDNet_weights/moddel_final_fog_weather.pth"
+  # WEIGHTS: "./MVDNet_weights/moddel_final_fog_weather.pth"
   # WEIGHTS: "./MVDNet_weights/moddel_final_mix_weather.pth"

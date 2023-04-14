@@ -112,7 +112,7 @@ We need to adjust symlinks' target so that the symlink file in `./data/RobotCar/
 
 ### Pretrain weight
 
-The pretrain weight for `clear_weather`, `mix_weather`, and `fog_weather` can be download from [CMU box](https://https://cmu.box.com/s/myfk2bxzq8bzqheroex3qwce35e7plrw)
+The pretrain weight for `clear_weather`, `mix_weather`, and `fog_weather` can be download from [CMU box](https://cmu.box.com/s/myfk2bxzq8bzqheroex3qwce35e7plrw)
 
 ### Train MVDNet
 ```
