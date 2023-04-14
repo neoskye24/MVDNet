@@ -11,7 +11,7 @@ This repo have some update from the original paper
 - Pytorch 1.9.1
 - Numpy 1.16.4
 - Detectron2 (modified version)
-- Pycocotools 2.0
+- Pycocotools
 
 __step 0__ in case you want plan to work on conda environment. Download and install fron the [official website](https://docs.conda.io/en/latest/miniconda.html)
 
@@ -35,7 +35,12 @@ conda install -c conda-forge numpy=1.16.4
 pip install numpy==1.16.4
 ```
 
-__Step 1__ MVDNet uses an old version of Detectron2 (i.e., 0.1.1) with [minor modifications](https://github.com/qiank10/detectron2/commit/370700b01be5ce401a1803af70d3e4c0471858c5). To download and install the compatible version:
+__Step 1__ install Pycocotools
+```
+pip install pycocotool
+```
+
+__Step 2__ MVDNet uses an old version of Detectron2 (i.e., 0.1.1) with [minor modifications](https://github.com/qiank10/detectron2/commit/370700b01be5ce401a1803af70d3e4c0471858c5). To download and install the compatible version:
 ```
 git clone https://github.com/qiank10/detectron2.git
 cd detectron2
@@ -49,76 +54,73 @@ git clone https://github.com/MaiRajborirug/MVDNet.git
 cd MVDNet && pip install -e .
 ```
 
-## Prepare Data
+### Prepare Data
 
-Download the [Oxford Radar RobotCar Dataset](https://oxford-robotics-institute.github.io/radar-robotcar-dataset). Currently, only the vehicles in the first data record (Date: 10/01/2019, Time: 11:46:21 GMT) are labeled. After unzipping the files, the directory should look like this:
+__Step 0__ download partually processed dataset
+
+This repo already partually processed the Oxford Radar RobotCar Dataset and can be downloaded from [CMU box](https://cmu.box.com/s/2xq20dr5hf6oncnou26owmkhzwnxdi73). If you are using the default configure, replace the github subfolder folder `MVDNet/data/RobotCar` with this unzipped folder `RobotCar`.
+
+> **_NOTE:_** The author of MVDNet create a 2D and 3D bounding box for data from [Oxford Radar RobotCar Dataset](https://oxford-robotics-institute.github.io/radar-robotcar-dataset) in the first record (Date: 10/01/2019, Time: 11:46:21 GMT). If your want to adjust the lidar fog density. You can follow the step from the original [MVDNet](https://github.com/qiank10/MVDNet/blob/main/README.md#prepare-data) github
+
 ```
 # Oxford Radar RobotCar Data Record
-|-- DATA_PATH
-    |-- gt
-    |-- radar
-    |-- velodyne_left
-    |-- velodyne_right
-    |-- vo
-    |-- radar.timestamps
-    |-- velodyne_left.timestamps
-    |-- velodyne_right.timestamps
+|-- RobotCar
+    |-- lidar_fog_0 # Lidar data with no fog effect
+        |-- lidar
+            |-- 1547120787645464.bin
+            |-- ...
+        |-- lidar_history
+            |-- 1547120788638924_1.bin # Symlink to the k-th lidar frame preceding (in `lidar` folder) the frame at the timestamp 1547120788638924, k=1,2,3,4. The reason MVDNet uses symlink is because it requires to much memory ot pepeat the actual pointcloud files
+            |-- 1547120788638924_1_T.bin # Transform matrix between the k-th preceding lidar frame and the current frame.
+            |-- ...
+    |-- lidar_fog_006 # Foggy lidar data with fog density as 0.06
+            |-- ...
+    |-- lidar_fog_mix # Randomly select clear weather lidar and 0.06 desnsity foggy lidar with each probability 50%
+            |-- ... 
+    |-- ImageSets
+        |-- train.txt # list of lidar and radar frame in training set
+        |-- eval.txt # list of lidar and radar frame in evaluation set
+        
+    |-- object
+        |-- radar
+            |-- 1547120788638924.jpg
+            |-- ...
+        |-- radar_history
+            |-- 1547120788638924_1.jpg # The k-th radar frame preceding the frame at the timestamp 1547120789640420, k=1,2,3,4.
+            |-- ...
+        |-- lidar_history # currently empty folder 
+        |-- lidar # currently empty folder 
+        |-- label_3d
+            |-- ...
+        |-- label_2d
+            |-- 1547120787645464.txt # 2D label in format: [class(only 'car')] [car_id] [top_left_x] [top_left_y] [width] [height] [angle] 
+            |-- ...
     |-- ...
 ```
 
-Prepare the radar data:
-```
-python data/sdk/prepare_radar_data.py --data_path DATA_PATH --image_size 320 --resolution 0.2
-```
+__Step 1__ select fog lidar
 
-Prepare the lidar data:
-```
-python data/sdk/prepare_lidar_data.py --data_path DATA_PATH
-```
+There are lidar datasets with three different fog augmentations in `/RobotCar/{lidar_fog_0, lidar_fog_006, lidar_fog_mix}/{lidar, lidar_history}`. Choose the fog condition and move `lidar` and `lidar_history` folder to `/RobotCar/objects/`
 
-Prepare the foggy lidar test set with specified fog density, e.g., 0.05:
-```
-python data/sdk/prepare_fog_data.py --data_path DATA_PATH --beta 0.05
-```
+__Step 2__ adjust symlink (optional)
+We need to adjust symlinks' target so that the symlink file in `./data/RobotCar/object/lidar_history/___.bin` point to in `./data/RobotCar/object/lidar/___.bin` The jupyter notebook function to adjust the symlink if in `./tool/change_symlink.ipynb`
 
-The processed data is organized as follows:
-```
-# Oxford Radar RobotCar Data Record
-|-- DATA_PATH
-    |-- processed
-        |-- radar
-            |-- 1547120789640420.jpg
-            |-- ...
-        |-- radar_history
-            |-- 1547120789640420_k.jpg   # The k-th radar frame preceding the frame at the timestamp 1547120789640420, k=1,2,3,4.
-            |-- ...
-        |-- lidar
-            |-- 1547120789640420.bin
-            |-- ...
-        |-- lidar_history
-            |-- 1547120789640420_k.bin   # Link to the k-th lidar frame preceding the frame at the timestamp 1547120789640420, k=1,2,3,4.
-            |-- 1547120789640420_k_T.bin # Transform matrix between the k-th preceding lidar frame and the current frame.
-            |-- ...
-        |-- lidar_fog_0.05               # Foggy lidar data with fog density as 0.05
-            |-- 1547120789640420.bin
-            |-- ...
-        |-- lidar_history_fog_0.05
-            |-- 1547120789640420_k.bin
-            |-- 1547120789640420_k_T.bin
-            |-- ...
-```
 
-Both 2D and 3D labels are in
-```
-./data/RobotCar/object/
-```
+## Train and Evaluation
 
-## Train MVDNet
+### Pretrain weight
+
+The pretrain weight for `lidar_fog_0` and `lidar_fog_mix` can be download from [CMU box](https://cmu.box.com/s/myfk2bxzq8bzqheroex3qwce35e7plrw)
+
+### Train MVDNet
 ```
 python ./tools/train.py --config ./configs/train_config.yaml
 ```
+The output directory can be adjusted in `MVDNet/configs/train_config.yaml`
 
-## Evaluate MVDNet
+### Evaluate MVDNet
 ```
 python ./tools/eval.py --config ./configs/eval_config.yaml
 ```
+
+The model weight directory can be adjusted in `MVDNet/configs/eval_config.yaml`
