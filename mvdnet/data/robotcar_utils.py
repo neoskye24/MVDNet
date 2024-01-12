@@ -145,7 +145,7 @@ def lidar_foggify(pts_3D, beta, n=0.02, g=0.45, dmin=2, fraction_random=0.05):
 def lidar_pc2pixor(lidar_data, delta_l=0.2, pixel_l=320, h1=-1.0, h2=2.5, delta_h=0.1):
     l1 = (-pixel_l/2) * delta_l
     l2 = (pixel_l/2) * delta_l
-    pixel_h = np.int(np.round((h2 - h1) / delta_h))
+    pixel_h = np.int64(np.round((h2 - h1) / delta_h))
 
     lidar_data[:,0] = -lidar_data[:,0]
     idx_x = np.logical_and(lidar_data[:,0] >= l1, lidar_data[:,0] < l2)
