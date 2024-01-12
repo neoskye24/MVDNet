@@ -230,7 +230,7 @@ def build_mvdnet_backbone(cfg, input_shape: ShapeSpec):
     num_history = cfg.INPUT.NUM_HISTORY+1
     history_on = cfg.INPUT.HISTORY_ON
 
-    lidar_channels = np.int(np.round(
+    lidar_channels = np.int64(np.round(
         (cfg.INPUT.LIDAR.PROJECTION.HEIGHT_UB 
         - cfg.INPUT.LIDAR.PROJECTION.HEIGHT_LB)
         / cfg.INPUT.LIDAR.PROJECTION.DELTA_H))+1
