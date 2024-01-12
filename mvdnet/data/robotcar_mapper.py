@@ -38,7 +38,8 @@ class RobotCarMapper:
         dataset_dict['width'] = self.pixel_l
         data_shape = np.array([self.pixel_l, self.pixel_l])
 
-        data_root = dataset_dict['data_root']
+        #data_root = dataset_dict['data_root']
+        data_root = '/kaggle/input/preprocessed-robot-car-dataset/RobotCar/object'
         timestamp = dataset_dict['timestamp']
 
         radar_path = os.path.join(data_root, 'radar')
