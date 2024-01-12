@@ -158,11 +158,11 @@ def lidar_pc2pixor(lidar_data, delta_l=0.2, pixel_l=320, h1=-1.0, h2=2.5, delta_
     lidar_bev_idx[:,0] = np.floor((lidar_data[:,0] - l1) / delta_l)
     lidar_bev_idx[:,1] = np.floor((lidar_data[:,1] - l1) / delta_l)
     lidar_bev_idx[lidar_bev_idx == pixel_l] = pixel_l - 1
-    lidar_bev_idx = lidar_bev_idx.astype(np.int)
+    lidar_bev_idx = lidar_bev_idx.astype(np.int64)
 
     lidar_height_idx = np.floor((lidar_data[:,2] - h1) / delta_h)
     lidar_height_idx[lidar_height_idx == pixel_h] = pixel_h - 1
-    lidar_height_idx = lidar_height_idx.astype(np.int)
+    lidar_height_idx = lidar_height_idx.astype(np.int64)
 
     lidar_intensity = np.zeros([pixel_l, pixel_l])
     lidar_occupancy = np.zeros([pixel_l, pixel_l, pixel_h])
