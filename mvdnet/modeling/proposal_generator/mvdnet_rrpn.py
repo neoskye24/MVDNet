@@ -12,7 +12,7 @@ from detectron2.modeling.anchor_generator import build_anchor_generator
 from detectron2.modeling.box_regression import Box2BoxTransformRotated
 from detectron2.modeling.matcher import Matcher
 from detectron2.modeling.proposal_generator.build import PROPOSAL_GENERATOR_REGISTRY
-from detectron2.modeling.proposal_generator.rrpn_outputs import RRPNOutputs
+from detectron2.modeling.proposal_generator.rrpn import RRPN
 from detectron2.modeling.proposal_generator.rpn import build_rpn_head
 
 def find_top_final_fusion_rrpn_proposals(
@@ -160,7 +160,7 @@ class MVDNetRRPN(nn.Module):
 
         outputs = {}
         for f in self.in_features:
-            outputs[f] = RRPNOutputs(
+            outputs[f] = RRPN(
                 self.box2box_transform,
                 self.anchor_matcher,
                 self.batch_size_per_image,
